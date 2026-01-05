@@ -1,20 +1,13 @@
 
 # Coursify
-**Your task is to create a course-selling website where admin can publish/create courses and user can purchase courses.**
 
-# Frontend
 
-**There are two Client folders**
-- if you are **not** familiar with **React**, pick `client-easy`.
-- if you are familiar with **React**, pick `client`.
-
-**Tips**: you can try cloning the UI of **app.100xdevs.com**.
 # Backend
 
 # Admin Routes Structure
 
 ### POST /admin/signup 
-**Description**: Creates a new admin account.  
+**Description**: Creates a new admin account.          
 **Input**: 
 ```json
 { 
