@@ -1,6 +1,6 @@
 const jwt=require('jsonwebtoken');
 const JWT_SECRET_user=process.env.JWT_SECRET_USER;
-console.log(JWT_SECRET_user);
+
 
 
 //verify the token
