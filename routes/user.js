@@ -83,6 +83,32 @@ userRouter.post('/courses/:courseId',userAuthMiddleware,async(req,res)=>{
 });
 
 
+
+
+//Lists all the courses purchased by the user
+userRouter.get('/purchasedCourses',userAuthMiddleware,async(req,res)=>{
+
+    const userId=req.userId; //get from userAuthMiddleware function
+    const allPurchase=await purchaseModel.find({
+        userId:userId
+    });
+    if(allPurchase){
+        //console.log(allPurchase);
+        let couseIdArray=[];
+        for(let i=0;i<allPurchase.length;i++){
+            couseIdArray.push(allPurchase[i].courseId);  //courseIdArray contain all the couseId          
+        }
+        const allCourses=await courseModel.find({
+            _id:{$in: couseIdArray} //if _id in the courseModel equal to courseIdArray--> that cotain all the courseId
+        }) 
+        res.json({courses:allCourses});
+        
+    }else{
+        res.status(403).json({msg:"User not verified"});
+    }
+    
+});
+
 module.exports={
     userRouter
 };
