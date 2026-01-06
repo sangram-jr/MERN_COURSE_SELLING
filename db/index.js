@@ -3,7 +3,18 @@ const dotenv=require('dotenv');
 dotenv.config();
 const mongoUrl=process.env.MONGO_URL;
 
-mongoose.connect(mongoUrl);
+const connectToDatabase=async()=>{
+    try {
+        await mongoose.connect(mongoUrl);
+        console.log('Connected to DB');
+        
+    } catch (error) {
+        console.log('DB connection Failed',error);
+        
+    }
+}
+
+
 
 
 
@@ -43,10 +54,12 @@ const purchaseModel=mongoose.model('purchases',purchaseSchema);
 
 
 module.exports={
+    connectToDatabase,
     userModel,
     adminModel,
     courseModel,
-    purchaseModel
+    purchaseModel,
+    
 
 }
 
