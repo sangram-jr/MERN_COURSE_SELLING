@@ -1,7 +1,10 @@
 
 # Coursify
 
-
+ **Add functionality later**: 1. password hashing 
+                              2. input validation using zod
+                              3.coockies based authentication rather than jwt
+                              4.Add frontend using react
 # Backend
 
 # Admin Routes Structure
