@@ -50,7 +50,7 @@ userRouter.post('/login',async (req,res)=>{
             res.status(403).json({msg:"User not found"});
         }
     } catch (error) {
-        res.status(500).json({msg:"error occur in user /signup endpoint",error});
+        res.status(500).json({msg:"error occur in user /login endpoint",error});
     }        
 });
 
@@ -58,11 +58,17 @@ userRouter.post('/login',async (req,res)=>{
 //get all the course
 userRouter.get('/courses',userAuthMiddleware,async(req,res)=>{
 
-    const response=await courseModel.find({});
-    if(!response){
-        res.status(403).json({msg:"you r not verified"});
+    try {
+        const response=await courseModel.find({});
+        if(!response){
+            res.status(403).json({msg:"you r not verified"});
+        }
+        res.json({courses:response});
+    } catch (error) {
+        res.status(500).json({msg:"error occur in user /course ->get endpoint",error});
     }
-    res.json({courses:response});
+
+    
 });
 
 
@@ -74,11 +80,17 @@ userRouter.post('/courses/:courseId',userAuthMiddleware,async(req,res)=>{
     const courseId=req.params.courseId;//get form route
     const userId=req.userId;//get from userAuthMiddleware function
 
-    const response=await purchaseModel.create({
-        userId:userId,
-        courseId:courseId
-    });
-    res.status(200).json({msg:"Course Purchased Successfully"});
+    try {
+        const response=await purchaseModel.create({
+            userId:userId,
+            courseId:courseId
+        });
+        res.status(200).json({msg:"Course Purchased Successfully"});
+    } catch (error) {
+        res.status(500).json({msg:"error occur in user /courses/:courseId ->put endpoint",error});
+    }
+
+    
 
 });
 
@@ -89,23 +101,29 @@ userRouter.post('/courses/:courseId',userAuthMiddleware,async(req,res)=>{
 userRouter.get('/purchasedCourses',userAuthMiddleware,async(req,res)=>{
 
     const userId=req.userId; //get from userAuthMiddleware function
-    const allPurchase=await purchaseModel.find({
-        userId:userId
-    });
-    if(allPurchase){
-        //console.log(allPurchase);
-        let couseIdArray=[];
-        for(let i=0;i<allPurchase.length;i++){
-            couseIdArray.push(allPurchase[i].courseId);  //courseIdArray contain all the couseId          
+
+    try {
+        const allPurchase=await purchaseModel.find({
+            userId:userId
+        });
+        if(allPurchase){
+            //console.log(allPurchase);
+            let couseIdArray=[];
+            for(let i=0;i<allPurchase.length;i++){
+                couseIdArray.push(allPurchase[i].courseId);  //courseIdArray contain all the couseId          
+            }
+            const allCourses=await courseModel.find({
+                _id:{$in: couseIdArray} //if _id in the courseModel equal to courseIdArray--> that cotain all the courseId
+            }) 
+            res.json({courses:allCourses});
+            
+        }else{
+            res.status(403).json({msg:"User not verified"});
         }
-        const allCourses=await courseModel.find({
-            _id:{$in: couseIdArray} //if _id in the courseModel equal to courseIdArray--> that cotain all the courseId
-        }) 
-        res.json({courses:allCourses});
-        
-    }else{
-        res.status(403).json({msg:"User not verified"});
+    } catch (error) {
+        res.status(500).json({msg:"error occur in user /purchasedCourses ->get endpoint",error});
     }
+    
     
 });
 
